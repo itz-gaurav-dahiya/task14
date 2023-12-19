@@ -311,7 +311,7 @@ var  port =process.env.PORT||2410
 
         let email=req.body.email;
         let password=req.body.password
-        let data1=customers.find((st)=>st.email===email)
+        let data1=customers.find((st)=>st.email==email)
         if(data1.password==password){
           let data2={
             name:data1.name,
@@ -339,10 +339,10 @@ var  port =process.env.PORT||2410
     let role=req.body.role
     if(name&&email&&password&&role){
       customers.push({custId:customers.length+1,name:name,password:password,role:role,email:email})
-     if(role==='student'){
+     if(role=='student'){
       students.unshift({id:students.length+1,name:name,dob:'',gender:'',about:"",courses:[]})
      }
-     else if(role==='faculty'){
+     else if(role=='faculty'){
      faculties.unshift({ id: faculties.length+1, name: name, courses: [] })
      }
      res.send({name:name,role:role,password:password})
@@ -567,20 +567,24 @@ app.put('/putStudentDetails',function(req,res){
   let gender=req.body.gender
   let about=req.body.about
   if(id&&name&&dob&&gender&&about&&about){
-    let data1={
-      
-    }
     let ind=students.findIndex((st)=>st.id==id)
     if(ind>=0){
       students[ind].name=name
-      students[ind].dob=dob;
-      students[ind].gender=gender;
+      students[ind].id=id
+      students[ind].dob=dob
+      students[ind].gender=gender
       students[ind].about=about
-      let data2=students[ind]
-      res.send(data2)
+      res.send(students[ind])
+    }else{
+      let data={
+        name:name,id:id,dob:dob,gender:gender,about:about,courses:[]
+      }
+      students.push(data)
+      res.send(data)
     }
-  }
-})
+}
+}
+)
 app.get('/getStudentDetails/:name', function(req, res) {
   let studentName = req.params.name;
 
